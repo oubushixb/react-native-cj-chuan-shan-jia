@@ -68,20 +68,20 @@ RCT_REMAP_METHOD(showSplash,
 RCT_REMAP_METHOD(showInt,
                  showIntWithResolver:(RCTPromiseResolveBlock)resolve
                  showIntWithRejecter:(RCTPromiseRejectBlock)reject) {
-  if(!self.interstitialId) {
-    return reject(@"400", @"没有interstitialId.无法展示插屏广告.", nil);
-  }
-  BOOL isValid = self.interstitialAd.isAdValid;
-  if(isValid) {
-    [self.interstitialAd showAdFromRootViewController:[[UIApplication sharedApplication].keyWindow rootViewController]];
-  }
+    if(!self.interstitialId) {
+        return reject(@"400", @"没有interstitialId.无法展示插屏广告.", nil);
+    }
+    self.interstitialResolve = resolve;
+    self.interstitialReject = reject;
+    BOOL isValid = self.interstitialAd.isAdValid;
+    if(isValid) {
+        [self.interstitialAd showAdFromRootViewController:[[UIApplication sharedApplication].keyWindow rootViewController]];
+    } else {
+        self.interstitialReject(@"400", @"穿山甲插屏广告还未准备好.", nil);
+    }
 }
 - (void)nativeExpresInterstitialAdDidLoad:(BUNativeExpressInterstitialAd *)interstitialAd{
-  /*dispatch_async(dispatch_get_main_queue(), ^{
-    [self.interstitialAd showAdFromRootViewController:[[UIApplication sharedApplication].keyWindow rootViewController]];
-  });*/
-  
-  
+    
 }
 - (void)nativeExpresInterstitialAd:(BUNativeExpressInterstitialAd *)interstitialAd didFailWithError:(NSError * __nullable)error {}
 - (void)nativeExpresInterstitialAdRenderSuccess:(BUNativeExpressInterstitialAd *)interstitialAd {
@@ -93,6 +93,6 @@ RCT_REMAP_METHOD(showInt,
  @param error : the reason of error
  */
 - (void)nativeExpresInterstitialAdRenderFail:(BUNativeExpressInterstitialAd *)interstitialAd error:(NSError * __nullable)error {
-  
+  self.interstitialReject(@"400", @"穿山甲插屏广告渲染失败.", nil);
 }
 @end

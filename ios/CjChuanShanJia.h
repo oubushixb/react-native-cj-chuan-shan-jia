@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *interstitialId;
 @property (nonatomic, strong) BUNativeExpressInterstitialAd *interstitialAd;
+@property (nonatomic, strong) RCTPromiseResolveBlock interstitialResolve;
+@property (nonatomic, strong) RCTPromiseRejectBlock interstitialReject;
 
 @end
 
